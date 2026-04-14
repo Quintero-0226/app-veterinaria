@@ -26,6 +26,9 @@ db.serialize(() => {
         service TEXT NOT NULL,
         appointment_date TEXT NOT NULL,
         medical_notes TEXT DEFAULT '',
+        diagnosis TEXT DEFAULT '',
+        weight REAL,
+        prescribed_medication TEXT DEFAULT '',
         status TEXT DEFAULT 'Scheduled',
         created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
         FOREIGN KEY (pet_id) REFERENCES pets(id)
@@ -45,8 +48,8 @@ db.serialize(() => {
     db.run("INSERT INTO owners (name) VALUES ('Maria García')");
     db.run("INSERT INTO pets (name, owner_id) VALUES ('Rex', 1)");
     db.run("INSERT INTO pets (name, owner_id) VALUES ('Luna', 2)");
-    db.run("INSERT INTO appointments (pet_id, service, appointment_date, medical_notes) VALUES (1, 'Corte de Pelo', '2026-02-25 10:00', 'Sin alergias conocidas')");
-    db.run("INSERT INTO appointments (pet_id, service, appointment_date, medical_notes) VALUES (2, 'Baño y Limpieza', '2026-02-25 11:30', 'Piel sensible')");
+    db.run("INSERT INTO appointments (pet_id, service, appointment_date, medical_notes, diagnosis, weight, prescribed_medication) VALUES (1, 'Consulta general', '2026-02-25 10:00', 'Sin alergias conocidas', 'Otitis leve', 22.4, 'Gotas oticas 2 veces al dia por 7 dias')");
+    db.run("INSERT INTO appointments (pet_id, service, appointment_date, medical_notes, diagnosis, weight, prescribed_medication) VALUES (2, 'Control dermatologico', '2026-02-25 11:30', 'Piel sensible', 'Dermatitis alergica controlada', 11.1, 'Shampoo medicado cada 72 horas')");
 
     // Usuarios de prueba
     db.run(`INSERT INTO users (username, password, full_name, role) VALUES ('admin', ?, 'Administrador', 'admin')`, [adminHash]);

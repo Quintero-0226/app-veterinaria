@@ -6,6 +6,9 @@ const { isAuthenticated, isVeterinario } = require('../middleware/auth');
 // Vista pública del panel
 router.get('/', appointmentController.getAllAppointments);
 
+// Historial clínico por paciente (solo lectura para médicos)
+router.get('/medical-history', isVeterinario, appointmentController.getMedicalHistory);
+
 // Criterio 1: solo veterinario/admin puede crear citas (campos médicos)
 router.get('/create', isVeterinario, appointmentController.getCreateForm);
 router.post('/create', isVeterinario, appointmentController.createAppointment);

@@ -1,0 +1,65 @@
+<section class="mb-4">
+    <div class="card border-0" style="background: linear-gradient(130deg, rgba(0,127,127,0.14), rgba(239,111,60,0.18));">
+        <div class="card-body p-4 p-md-5 d-flex flex-column flex-md-row justify-content-between gap-3 align-items-md-center">
+            <div>
+                <p class="text-uppercase fw-semibold mb-2" style="font-size: .74rem; letter-spacing: .08em; color: #0f6464;">Expediente medico</p>
+                <h1 class="page-title mb-1">Historial Clinico de Pacientes</h1>
+                <p class="muted mb-0">Cronologia de visitas agrupada por ID de mascota en modo solo lectura.</p>
+            </div>
+            <a href="/" class="btn btn-outline-brand">Volver al panel</a>
+        </div>
+    </div>
+</section>
+
+<section>
+    <% if (historyGroups.length === 0) { %>
+        <div class="card text-center p-5">
+            <h3 class="page-title" style="font-size:1.7rem;">No hay historial disponible</h3>
+            <p class="muted mb-0">Cuando se registren citas medicas, apareceran aqui.</p>
+        </div>
+    <% } else { %>
+        <div class="d-flex flex-column gap-4">
+            <% historyGroups.forEach(group => { %>
+                <article class="card">
+                    <div class="card-body p-4 p-md-5">
+                        <div class="d-flex flex-column flex-md-row justify-content-between align-items-md-center gap-2 mb-4">
+                            <div>
+                                <h2 class="mb-1" style="font-family:'DM Serif Display', serif; font-size:1.7rem; color:#0d5353;"><%= group.pet_name %></h2>
+                                <p class="muted mb-0">
+                                    <strong>ID Mascota:</strong> <%= group.pet_id %> |
+                                    <strong>Dueno:</strong> <%= group.owner_name %>
+                                </p>
+                            </div>
+                            <span class="status-chip status-confirmada">Solo lectura</span>
+                        </div>
+
+                        <div class="table-responsive">
+                            <table class="table align-middle mb-0">
+                                <thead>
+                                    <tr>
+                                        <th>Fecha</th>
+                                        <th>Servicio</th>
+                                        <th>Diagnostico</th>
+                                        <th>Peso (kg)</th>
+                                        <th>Medicina recetada</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <% group.visits.forEach(visit => { %>
+                                        <tr>
+                                            <td><%= visit.appointment_date %></td>
+                                            <td><%= visit.service %></td>
+                                            <td><%= visit.diagnosis || 'Sin diagnostico' %></td>
+                                            <td><%= visit.weight !== null ? visit.weight : 'N/A' %></td>
+                                            <td><%= visit.prescribed_medication || 'No indicada' %></td>
+                                        </tr>
+                                    <% }) %>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </article>
+            <% }) %>
+        </div>
+    <% } %>
+</section>
