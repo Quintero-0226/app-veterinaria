@@ -1,8 +1,8 @@
 const db = require('../config/db');
 
 const Owner = {
-    findAll(callback) {
-        db.all('SELECT * FROM owners', [], callback);
+    findAll() {
+        return db.prepare('SELECT * FROM owners').all();
     }
 };
 

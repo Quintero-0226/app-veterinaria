@@ -15,8 +15,8 @@ exports.postLogin = (req, res) => {
         return res.render('login', { title: 'Iniciar Sesión', error: 'Completa todos los campos.' });
     }
 
-    User.findByUsername(username, (err, user) => {
-        if (err) return res.status(500).send(err.message);
+    try {
+        const user = User.findByUsername(username);
 
         if (!user) {
             return res.render('login', { title: 'Iniciar Sesión', error: 'Usuario o contraseña incorrectos.' });
@@ -35,13 +35,14 @@ exports.postLogin = (req, res) => {
         };
 
         const redirectTo = req.session.returnTo || '/';
-        delete req.session.returnTo;
+        req.session.returnTo = null;
         res.redirect(redirectTo);
-    });
+    } catch (err) {
+        res.status(500).send(err.message);
+    }
 };
 
 exports.logout = (req, res) => {
-    req.session.destroy(() => {
-        res.redirect('/login');
-    });
+    req.session = null;
+    res.redirect('/login');
 };

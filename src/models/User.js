@@ -1,8 +1,8 @@
 const db = require('../config/db');
 
 const User = {
-    findByUsername(username, callback) {
-        db.get('SELECT * FROM users WHERE username = ?', [username], callback);
+    findByUsername(username) {
+        return db.prepare('SELECT * FROM users WHERE username = ?').get(username);
     }
 };
 
