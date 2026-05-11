@@ -1,5 +1,6 @@
 const express = require('express');
 const path = require('path');
+const fs = require('fs');
 const expressLayouts = require('express-ejs-layouts');
 const morgan = require('morgan');
 const cookieSession = require('cookie-session');
@@ -8,9 +9,25 @@ const authRoutes = require('./routes/authRoutes');
 
 const app = express();
 
-const viewsPath = process.env.NETLIFY
-    ? path.join(process.cwd(), 'views')
-    : path.join(__dirname, '..', 'views');
+function resolveDir(name) {
+    const candidates = [
+        path.join(__dirname, '..', name),
+        path.join(__dirname, name),
+        path.join(__dirname, '..', '..', name),
+        path.join(process.cwd(), name),
+        path.join('/var/task', name),
+        path.join('/var/task/netlify/functions', name)
+    ];
+    for (const candidate of candidates) {
+        try {
+            if (fs.statSync(candidate).isDirectory()) return candidate;
+        } catch {}
+    }
+    return candidates[0];
+}
+
+const viewsPath = resolveDir('views');
+const publicPath = resolveDir('public');
 
 app.set('views', viewsPath);
 app.set('view engine', 'ejs');
@@ -20,7 +37,7 @@ app.set('layout', 'layout');
 app.use(morgan('dev'));
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
-app.use(express.static(path.join(__dirname, '..', 'public')));
+app.use(express.static(publicPath));
 
 app.use(cookieSession({
     name: 'pelucan_session',
