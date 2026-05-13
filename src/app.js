@@ -37,6 +37,12 @@ app.set('layout', 'layout');
 app.use(morgan('dev'));
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
+app.use((req, res, next) => {
+    if (typeof req.body === 'string' && req.body.trim()) {
+        req.body = Object.fromEntries(new URLSearchParams(req.body));
+    }
+    next();
+});
 app.use(express.static(publicPath));
 
 app.use(cookieSession({
